@@ -3,7 +3,19 @@
 @tailwind components;
 @tailwind utilities;
 
-*{
+* {
     color: white;
     font-family: 'Source Sans Pro', sans-serif;
+}
+
+::-webkit-scrollbar {
+    width: 16px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #666666;
+}
+
+::-webkit-scrollbar-track {
+    background: #333333;
 }

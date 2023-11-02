@@ -11,6 +11,9 @@ export default {
       secondary:"#2b2b2b",
       bg1:"#222222",
       accent:"#00a6a6",
+      modal: "rgba(0, 0, 0, .8)",
+
+
     },
   },
   plugins: [],
