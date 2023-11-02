@@ -2,27 +2,19 @@ import { useState, useEffect } from 'react';
 import { DateTime } from 'luxon';
 import CalendarGrid from "./CalendarGrid";
 import fetchCommits from '../utils/fetchCommits';
-import Modal from './Modal';
 
 const Calendar = () => {
     const [currentMonth, setCurrentMonth] = useState(DateTime.local());
-    const [isModalVisible, setIsModalVisible] = useState(true);
+
     const [commitData, setCommitData] = useState([]);
+    const [commitRepo, setCommitRepo] = useState(["framer", "motion"]);
 
-    const openModal = () => {
-        setIsModalVisible(true);
-    };
-
-    const closeModal = () => {
-        setIsModalVisible(false);
-    };
-
-    /*useEffect(() => {
-        // Fetch commit data for a specific repository
-        fetchCommits('Siziii', 'Sizi.Dev.App')
+    useEffect(() => {
+        console.log('Fetching commit data...');
+        fetchCommits(commitRepo[0], commitRepo[1])
           .then((data) => setCommitData(data))
           .catch((error) => console.error('Error fetching commits:', error));
-      }, []);*/
+      }, []);
 
     // Event handler to navigate to the previous month
     const handlePrevMonth = () => {
@@ -33,13 +25,9 @@ const Calendar = () => {
     const handleNextMonth = () => {
         setCurrentMonth((prevMonth) => prevMonth.plus({ months: 1 }));
     };
-    //console.log(commitData)
+
     return (
         <>
-            {
-                isModalVisible && <Modal closeModal={closeModal}/>
-            }
-
             <div className="w-[80%] flex flex-col">
                 <div className="w-full flex justify-between mb-2">
                     <h1 className="text-xl font-bold">{currentMonth.toLocaleString({ year: 'numeric', month: 'long' })}</h1>
@@ -51,7 +39,7 @@ const Calendar = () => {
                     </div>
                 </div>
                 <div>
-                    <CalendarGrid currentMonth={currentMonth} />
+                    <CalendarGrid currentMonth={currentMonth} commitData={commitData} commitRepo={commitRepo}/>
                 </div>
             </div>
         </>

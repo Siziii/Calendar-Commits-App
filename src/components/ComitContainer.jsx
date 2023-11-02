@@ -1,4 +1,10 @@
-const ComitContainer = ({authorName, authorEmail, commitTime, commitMessage, commitSHA}) => {
+const ComitContainer = ({authorName, authorEmail, commitTime, commitMessage, commitSHA, commitRepo}) => {
+
+    const openCommitInNewTab = () => {
+        const commitURL = `https://github.com/${commitRepo[0]}/${commitRepo[1]}/commit/${commitSHA}`;
+        window.open(commitURL, '_blank');
+    };
+
     return (
         <div className="bg-[#292929] w-full p-4 mb-4 rounded-md">
 
@@ -36,7 +42,7 @@ const ComitContainer = ({authorName, authorEmail, commitTime, commitMessage, com
                     <div className="bg-primary py-2 px-3 rounded-md w-full">
                         <span>{commitSHA}</span>
                     </div>
-                    <button className="bg-primary py-2 px-8 rounded-md hover:bg-accent transition-all"> ViewCode</button>
+                    <button className="bg-primary py-2 px-8 rounded-md hover:bg-accent transition-all" onClick={()=>openCommitInNewTab()}> ViewCode</button>
                 </div>
             </div>
 
