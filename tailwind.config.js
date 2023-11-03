@@ -7,11 +7,11 @@ export default {
   theme: {
     extend: {},
     colors:{
-      primary:"#3B3B3B",
-      secondary:"#2b2b2b",
-      bg1:"#222222",
+      primary:"#333333",
+      secondary:"#232323",
+      bg1:"#111111",
       accent:"#00a6a6",
-      modal: "rgba(0, 0, 0, .8)",
+      modal: "rgba(0, 0, 0, .6)",
 
 
     },

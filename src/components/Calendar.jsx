@@ -2,19 +2,18 @@ import { useState, useEffect } from 'react';
 import { DateTime } from 'luxon';
 import CalendarGrid from "./CalendarGrid";
 import fetchCommits from '../utils/fetchCommits';
+import {CaretLeftFill, CaretRightFill} from 'react-bootstrap-icons';
 
-const Calendar = () => {
+const Calendar = ({ commitRepo }) => {
     const [currentMonth, setCurrentMonth] = useState(DateTime.local());
-
     const [commitData, setCommitData] = useState([]);
-    const [commitRepo, setCommitRepo] = useState(["framer", "motion"]);
 
     useEffect(() => {
-        console.log('Fetching commit data...');
+        console.log('Fetching commit data from', commitRepo[0], commitRepo[1]);
         fetchCommits(commitRepo[0], commitRepo[1])
-          .then((data) => setCommitData(data))
-          .catch((error) => console.error('Error fetching commits:', error));
-      }, []);
+            .then((data) => setCommitData(data))
+            .catch((error) => console.error('Error fetching commits:', error));
+    }, [commitRepo]);
 
     // Event handler to navigate to the previous month
     const handlePrevMonth = () => {
@@ -27,22 +26,23 @@ const Calendar = () => {
     };
 
     return (
-        <>
-            <div className="w-[80%] flex flex-col">
-                <div className="w-full flex justify-between mb-2">
-                    <h1 className="text-xl font-bold">{currentMonth.toLocaleString({ year: 'numeric', month: 'long' })}</h1>
-                    <div>
+        <div className="w-full max-w-2xl flex flex-col">
+            <div className='bg-secondary rounded p-4'>
+                <div className="w-full flex justify-between mb-4">
+                    <h1 className="text-xl font-bold">{currentMonth.toLocaleString({ year: 'numeric', month: 'short' })}</h1>
+                    <div className='flex'>
                         {/*button for next month*/}
-                        <button className="w-8 h-8 bg-primary rounded-lg mr-2 hover:bg-accent transition-all" onClick={handlePrevMonth}>{'<'}</button>
+                        <button className="w-8 h-8 bg-primary rounded mr-1 hover:bg-accent transition-all flex items-center justify-center" onClick={handlePrevMonth}> <CaretLeftFill/> </button>
                         {/*button for prev month*/}
-                        <button className="w-8 h-8 bg-primary rounded-lg hover:bg-accent transition-all" onClick={handleNextMonth}>{'>'}</button>
+                        <button className="w-8 h-8 bg-primary rounded hover:bg-accent transition-all flex items-center justify-center" onClick={handleNextMonth}> <CaretRightFill/> </button>
                     </div>
                 </div>
+                
                 <div>
-                    <CalendarGrid currentMonth={currentMonth} commitData={commitData} commitRepo={commitRepo}/>
+                    <CalendarGrid currentMonth={currentMonth} commitData={commitData} commitRepo={commitRepo} />
                 </div>
             </div>
-        </>
+        </div>
     );
 }
 

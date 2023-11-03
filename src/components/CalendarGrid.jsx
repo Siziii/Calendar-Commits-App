@@ -1,8 +1,18 @@
-import { DateTime } from 'luxon';
 import Modal from './Modal';
 import { useState } from 'react';
+import { filterCommitsForDate } from '../utils/filterCommitsForDate';
+import GridItemEmpty from './GridItems/GridItemEmpty';
+import GridItem from './GridItems/Griditem';
+import GridItemCommit from './GridItems/GridItemCommit';
 
-const CalendarGrid = ({ currentMonth, commitData,commitRepo }) => {
+
+// Constants
+const NUM_ROWS = 6;
+const NUM_COLS = 7;
+const MOBILE_BREAKPOINT = 500;
+
+
+const CalendarGrid = ({ currentMonth, commitData, commitRepo }) => {
 
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedDate, setSelectedDate] = useState(null);
@@ -10,81 +20,87 @@ const CalendarGrid = ({ currentMonth, commitData,commitRepo }) => {
     const openModal = () => {
         setIsModalVisible(true);
     };
-    
+
+
     const closeModal = () => {
         setIsModalVisible(false);
     };
 
-    const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const isMobile = window.innerWidth < MOBILE_BREAKPOINT;
 
-    // Store the first day of the current month
-    const firstDay = currentMonth.startOf('month').weekday;
-    // Store the number of days in the current month
-    const daysInMonth = currentMonth.daysInMonth;
+    // Render the days of the week
+    const renderDaysOfWeek = () => {
+        const daysOfWeekValues = isMobile
+            ? ['M', 'T', 'W', 'R', 'F', 'S', 'U']
+            : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-    const daysBeforeStart = (firstDay - 1 + 7) % 7;
+        return daysOfWeekValues.map((day, index) => (
+            <div key={index} className="grid-cell bg-accent text-center font-bold rounded p-1">
+                {day}
+            </div>
+        ));
+    };
 
-    commitData.map((commit, index) => {
-        const date = commit?.commit?.author?.date;
-        console.log(`Date for commit ${index + 1}:`, date);
-    });
 
-    const daysInGrid = Array.from({ length: 6 }, (_, weekIndex) => (
-        <tr key={weekIndex} className="bg-bg2">
-            {daysOfWeek.map((day, dayIndex) => {
-
-                const dayNumber = dayIndex + weekIndex * 7 - daysBeforeStart + 1;
-                let date;
-
-                if (dayNumber >= 1 && dayNumber <= daysInMonth) {
-                    date = currentMonth.set({ day: dayNumber });
+    // Render grid
+    const generateGrid = () => {
+        const grid = [];
+        const firstDay = currentMonth.startOf('month').weekday;
+        const daysInMonth = currentMonth.daysInMonth;
+        const daysBeforeStart = (firstDay + NUM_ROWS) % NUM_COLS;
+    
+        for (let row = 0; row < NUM_ROWS; row++) {
+            for (let col = 0; col < NUM_COLS; col++) {
+                const dayNumber = col + row * NUM_COLS - daysBeforeStart + 1;
+                const date = currentMonth.set({ day: dayNumber });
+                const commitsForDate = filterCommitsForDate(commitData, date);
+    
+                if (dayNumber > 0 && dayNumber <= daysInMonth) {
+                    if (commitsForDate.length > 0) {
+                        grid.push(
+                            <GridItemCommit
+                                key={col+'-'+row}
+                                dayNumber={dayNumber}
+                                commitNumber={commitsForDate.length}
+                                setSelectedDate={setSelectedDate}
+                                openModal={openModal}
+                                date={date}
+                            />
+                        )
+                    }
+                    else {
+                        grid.push(
+                            <GridItem
+                                key={col+'-'+row}
+                                dayNumber={dayNumber}
+                            />
+                        )
+                    }
                 }
-
-                //set the bgClass based on if date exists
-                const bgClass = date ? 'bg-primary' : 'bg-secondary';
-
-                //check if day has any commit data
-                const hasCommits = commitData.some((commit) => {
-                    const commitDate = DateTime.fromISO(commit.commit.author.date);
-                    return date && commitDate.hasSame(date, 'day');
-                });
-
-                return (
-                    <td key={dayIndex} className={`border border-[#5A5A5A] p-0 ${bgClass} h-24 align-top`}>
-                        {date && (
-                            <div className='flex flex-col items-end p-3 h-full'>
-                                <span className='text-sm '>{date.day}</span>
-                                <div className='w-full h-full flex items-center'>
-                                    {hasCommits && (
-                                        <button className='w-full bg-accent p-2 rounded-md flex' onClick={() =>{setSelectedDate(date); openModal();}}>
-                                            See commits
-                                        </button>
-                                    )}
-                                </div>
-                            </div>
-                        )}
-                    </td>
-                )
-            })}
-        </tr>
-    ));
-
-    return (<>
-        {
-            isModalVisible && <Modal closeModal={closeModal} commitData={commitData} selectedDate={selectedDate} commitRepo={commitRepo}/>
+                else {
+                    grid.push(
+                        <GridItemEmpty
+                            key={col+'-'+row}
+                        />
+                    )
+                }
+            }
         }
-        <table className="w-full table-fixed">
-            <thead>
-                <tr className='bg-accent h-12'>
-                    {daysOfWeek.map((day) => (
-                        <th key={day} className=''>{day}</th>
-                    ))}
-                </tr>
-            </thead>
-            <tbody className='p-4'>{daysInGrid}</tbody>
-        </table>
-    </>
-    )
+
+        return grid;
+    }
+
+    return (
+        <>
+            {isModalVisible && <Modal closeModal={closeModal} commitData={commitData} selectedDate={selectedDate} commitRepo={commitRepo} />}
+
+            <div className="grid grid-cols-7 gap-1">
+                {renderDaysOfWeek()}
+                {generateGrid()}
+            </div>
+            
+        </>
+    );
 }
 
 export default CalendarGrid;
