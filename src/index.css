@@ -6,8 +6,7 @@
 * {
     color: white;
     font-family: 'Source Sans Pro', sans-serif;
-    overflow: hidden;
-
+    overflow-x: hidden;
 }
 
 ::-webkit-scrollbar {

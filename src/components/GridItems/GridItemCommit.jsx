@@ -7,7 +7,7 @@ const GridItemCommit = ({dayNumber, commitNumber, setSelectedDate, openModal, da
             className="bg-[#138484] rounded aspect-square cursor-pointer group"
             onClick={() => { setSelectedDate(date); openModal(); }}
         >
-            <div className='w-full bg-accent rounded-t flex justify-center sm:justify-end items-center h-full sm:h-2/5 lg:h-1/3'>
+            <div className='w-full bg-accent rounded-t rounded-b sm:rounded-b-none flex justify-center sm:justify-end items-center h-full sm:h-2/5 lg:h-1/3'>
                 <span className='sm:mr-2 text-sm font-semibold'> {dayNumber} </span>
             </div>
             <div className='hidden sm:flex items-center justify-center relative h-3/5 lg:h-2/3 w-full'>
