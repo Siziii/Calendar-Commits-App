@@ -6,7 +6,6 @@ const RepoInput = ({ setCommitRepo }) => {
     const [input2, setInput2] = useState('');
 
     const handleSubmit = (e) => {
-        console.log(input1, input2);
         e.preventDefault();
         setCommitRepo([input1, input2]);
     };
