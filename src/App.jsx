@@ -1,18 +1,18 @@
-import Calendar from "./components/Calendar"
-import RepoInput from "./components/RepoInput"
 
-import { useState } from "react";
+import { Routes, Route } from "react-router-dom";
+import NotFound from "./components/NotFound";
+import Main from "./components/Main";
+
 function App() {
-  const [commitRepo, setCommitRepo] = useState(["framer", "motion"]);
+
 
   return (
-    <div className="bg-bg1 h-screen w-screen flex justify-center items-center ">
-      <div className="flex flex-col md:flex-row w-[90%] justify-center py-6">
-        <RepoInput setCommitRepo={setCommitRepo}/>
-        <Calendar commitRepo={commitRepo}/>
-      </div>
-    </div>
+    <Routes>
+      <Route path="/" element={<Main/>}/>
+      <Route path="/:date" element={<Main/>}/>
+      <Route path="/404" element={<NotFound/>}/>
+    </Routes>
   )
-}
+} 
 
 export default App

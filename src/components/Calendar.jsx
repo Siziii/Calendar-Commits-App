@@ -3,9 +3,16 @@ import { DateTime } from 'luxon';
 import CalendarGrid from "./CalendarGrid";
 import fetchCommits from '../utils/fetchCommits';
 import {CaretLeftFill, CaretRightFill} from 'react-bootstrap-icons';
+import { useParams, Navigate } from "react-router-dom";
 
 const Calendar = ({ commitRepo }) => {
-    const [currentMonth, setCurrentMonth] = useState(DateTime.local());
+    const { date } = useParams();
+
+    if (date && !DateTime.fromISO(date).isValid) {
+        return <Navigate to="/404" />;
+    }
+
+    const [currentMonth, setCurrentMonth] = useState(date ? DateTime.fromISO(date) : DateTime.local());
     const [commitData, setCommitData] = useState([]);
 
     useEffect(() => {
