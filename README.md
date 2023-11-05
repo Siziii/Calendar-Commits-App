@@ -34,7 +34,6 @@ Before running the project locally without Docker, make sure you have the follow
 
 - Node.js: [Download Node.js](https://nodejs.org/)
 - npm (Node Package Manager): [Download npm](https://www.npmjs.com/get-npm)
-- Git: [Download Git](https://git-scm.com/downloads)
 
 ### Getting Started
 
