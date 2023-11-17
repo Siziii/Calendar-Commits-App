@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useParams, Navigate } from "react-router-dom";
 import { DateTime } from 'luxon';
 import CalendarGrid from "./CalendarGrid";
-import fetchCommits from '../utils/fetchCommits';
+import useFetchCommits from '../hooks/useFetchCommits';
 import { CaretLeftFill, CaretRightFill } from 'react-bootstrap-icons';
-import { useParams, Navigate } from "react-router-dom";
 import repoSvg from './../assets/repo.svg'
+
 const Calendar = ({ commitRepo }) => {
     const { date } = useParams();
 
@@ -13,31 +14,7 @@ const Calendar = ({ commitRepo }) => {
     }
 
     const [currentMonth, setCurrentMonth] = useState(date ? DateTime.fromISO(date) : DateTime.local());
-    const [commitData, setCommitData] = useState([]);
-    const [isRepoValid, setIsRepoValid] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-
-    // Fetch Data
-    const fetchData = async () => {
-        console.log('Fetching commit data from', commitRepo[0], commitRepo[1]);
-        setIsLoading(true);
-
-        try {
-            const data = await fetchCommits(commitRepo[0], commitRepo[1]);
-            setCommitData(data);
-            setIsRepoValid(true);
-        } catch (error) {
-            setCommitData([]);
-            setIsRepoValid(false);
-            console.error('Error fetching commits:', error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchData();
-    }, [commitRepo]);
+    const { commitData, isRepoValid, isLoading } = useFetchCommits(commitRepo[0], commitRepo[1], currentMonth);
 
     // Event handler to navigate to the previous month
     const handlePrevMonth = () => {
@@ -71,9 +48,7 @@ const Calendar = ({ commitRepo }) => {
                     </div>
                 </div>
 
-
-                    <CalendarGrid currentMonth={currentMonth} commitData={commitData} commitRepo={commitRepo} />
-
+                <CalendarGrid currentMonth={currentMonth} commitData={commitData} commitRepo={commitRepo} />
             </div>
         </div >
     );

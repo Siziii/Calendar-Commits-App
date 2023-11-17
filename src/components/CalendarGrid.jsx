@@ -1,16 +1,15 @@
 import Modal from './Modal';
 import { useState } from 'react';
 import { filterCommitsForDate } from '../utils/filterCommitsForDate';
+
 import GridItemEmpty from './GridItems/GridItemEmpty';
 import GridItem from './GridItems/Griditem';
 import GridItemCommit from './GridItems/GridItemCommit';
-
 
 // Constants
 const NUM_ROWS = 6;
 const NUM_COLS = 7;
 const MOBILE_BREAKPOINT = 500;
-
 
 const CalendarGrid = ({ currentMonth, commitData, commitRepo }) => {
 
@@ -40,7 +39,6 @@ const CalendarGrid = ({ currentMonth, commitData, commitRepo }) => {
             </div>
         ));
     };
-
 
     // Render grid
     const generateGrid = () => {
@@ -98,7 +96,6 @@ const CalendarGrid = ({ currentMonth, commitData, commitRepo }) => {
                 {renderDaysOfWeek()}
                 {generateGrid()}
             </div>
-            
         </>
     );
 }

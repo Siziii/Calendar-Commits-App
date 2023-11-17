@@ -3,7 +3,7 @@ import commitSvg_white from './../../assets/commit_white.svg'
 
 const GridItemCommit = ({dayNumber, commitNumber, setSelectedDate, openModal, date}) => {
     return (
-        <div
+        <button
             className="bg-[#138484] rounded aspect-square cursor-pointer group"
             onClick={() => { setSelectedDate(date); openModal(); }}
         >
@@ -18,8 +18,8 @@ const GridItemCommit = ({dayNumber, commitNumber, setSelectedDate, openModal, da
                     <span className='font-bold text-xl flex items-center'>{commitNumber} <img src={commitSvg_white} alt="commit svg" className='h-[1.25rem] ml-1' /></span>
                 </div>
             </div>
-        </div>
+        </button>
     );
 }
 
-export default GridItemCommit;
+export default GridItemCommit; 
